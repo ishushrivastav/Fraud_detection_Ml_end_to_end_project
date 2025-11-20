@@ -5,6 +5,7 @@ from contextlib import asynccontextmanager
 import joblib
 import pandas as pd
 import numpy as np
+import time
 from database import SessionLocal, FraudPrediction
 
 
@@ -54,8 +55,11 @@ class Transaction(BaseModel):
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global model
+    start_time = time.time()
     model = joblib.load(MODEL_PATH)
-    print("✔ Model Loaded")
+    end_time = time.time()
+    load_time = end_time - start_time
+    print(f"✔ Model Loaded in {load_time:.2f} seconds")
     yield
 
 
